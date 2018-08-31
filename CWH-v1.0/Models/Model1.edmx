@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="Model1.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="Model1TargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Model1" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="Model1Container" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Stores1" EntityType="Model1.Store" />
+          <EntitySet Name="Brands" EntityType="Model1.Brand" />
+          <EntitySet Name="Chemists" EntityType="Model1.Chemist" />
+          <EntitySet Name="Buyers" EntityType="Model1.Buyer" />
+          <EntitySet Name="BuyerLists" EntityType="Model1.BuyerList" />
+          <AssociationSet Name="BuyerBuyerList" Association="Model1.BuyerBuyerList">
+            <End Role="Buyer" EntitySet="Buyers" />
+            <End Role="BuyerList" EntitySet="BuyerLists" />
+          </AssociationSet>
+          <AssociationSet Name="BrandProduct" Association="Model1.BrandProduct">
+            <End Role="Brand" EntitySet="Brands" />
+            <End Role="Product" EntitySet="Chemists" />
+          </AssociationSet>
+          <EntitySet Name="Products" EntityType="Model1.Product" />
+          <AssociationSet Name="ChemistProduct" Association="Model1.ChemistProduct">
+            <End Role="Chemist" EntitySet="Chemists" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="storeProduct" Association="Model1.storeProduct">
+            <End Role="store" EntitySet="Stores1" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <EntitySet Name="ShopLists" EntityType="Model1.ShopList" />
+          <AssociationSet Name="BuyerListShopList" Association="Model1.BuyerListShopList">
+            <End Role="BuyerList" EntitySet="BuyerLists" />
+            <End Role="ShopList" EntitySet="ShopLists" />
+          </AssociationSet>
+          <AssociationSet Name="ProductShopList" Association="Model1.ProductShopList">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ShopList" EntitySet="ShopLists" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Store">
+          <Key>
+            <PropertyRef Name="sID" />
+          </Key>
+          <Property Name="sID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sName" Type="String" Nullable="false" />
+          <Property Name="sAddress" Type="String" Nullable="false" />
+          <Property Name="sPostcode" Type="String" Nullable="false" />
+          <Property Name="sSuburb" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Brand">
+          <Key>
+            <PropertyRef Name="brID" />
+          </Key>
+          <Property Name="brID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="brName" Type="String" Nullable="false" />
+          <Property Name="brAddress" Type="String" Nullable="false" />
+          <Property Name="brPhoneNumber" Type="String" Nullable="false" />
+          <NavigationProperty Name="Products" Relationship="Model1.BrandProduct" FromRole="Brand" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Chemist">
+          <Key>
+            <PropertyRef Name="cID" />
+          </Key>
+          <Property Name="cID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cName" Type="String" Nullable="false" />
+          <Property Name="cAmount" Type="String" Nullable="false" />
+          <NavigationProperty Name="Brand" Relationship="Model1.BrandProduct" FromRole="Product" ToRole="Brand" />
+          <Property Name="Brand_brID" Type="Int32" Nullable="false" />
+          <Property Name="cDescription" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Buyer">
+          <Key>
+            <PropertyRef Name="byID" />
+          </Key>
+          <Property Name="byID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="byFname" Type="String" Nullable="false" />
+          <Property Name="byLname" Type="String" Nullable="false" />
+          <Property Name="byPhoneNumber" Type="String" Nullable="false" />
+          <Property Name="byRegdate" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="BuyerLists" Relationship="Model1.BuyerBuyerList" FromRole="Buyer" ToRole="BuyerList" />
+        </EntityType>
+        <EntityType Name="BuyerList">
+          <Key>
+            <PropertyRef Name="blID" />
+          </Key>
+          <Property Name="blID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="blCreateDate" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="Buyer" Relationship="Model1.BuyerBuyerList" FromRole="BuyerList" ToRole="Buyer" />
+          <Property Name="byID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ShopLists" Relationship="Model1.BuyerListShopList" FromRole="BuyerList" ToRole="ShopList" />
+        </EntityType>
+        <Association Name="BuyerBuyerList">
+          <End Type="Model1.Buyer" Role="Buyer" Multiplicity="1" />
+          <End Type="Model1.BuyerList" Role="BuyerList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Buyer">
+              <PropertyRef Name="byID" />
+            </Principal>
+            <Dependent Role="BuyerList">
+              <PropertyRef Name="byID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="BrandProduct">
+          <End Type="Model1.Brand" Role="Brand" Multiplicity="1" />
+          <End Type="Model1.Chemist" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Brand">
+              <PropertyRef Name="brID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="Brand_brID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="sID" />
+            <PropertyRef Name="cID" />
+          </Key>
+          <Property Name="pPrice" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="Chemist" Relationship="Model1.ChemistProduct" FromRole="Product" ToRole="Chemist" />
+          <Property Name="cID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="store" Relationship="Model1.storeProduct" FromRole="Product" ToRole="store" />
+          <Property Name="sID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ShopLists" Relationship="Model1.ProductShopList" FromRole="Product" ToRole="ShopList" />
+        </EntityType>
+        <Association Name="ChemistProduct">
+          <End Type="Model1.Chemist" Role="Chemist" Multiplicity="1" />
+          <End Type="Model1.Product" Role="Product" Multiplicity="*" />
+        </Association>
+        <Association Name="storeProduct">
+          <End Type="Model1.Store" Role="store" Multiplicity="1" />
+          <End Type="Model1.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="store">
+              <PropertyRef Name="sID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="sID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ShopList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="BuyerList" Relationship="Model1.BuyerListShopList" FromRole="ShopList" ToRole="BuyerList" />
+          <Property Name="BuyerList_blID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Model1.ProductShopList" FromRole="ShopList" ToRole="Product" />
+          <Property Name="Product_sID" Type="Int32" Nullable="false" />
+          <Property Name="Product_cID" Type="Int32" Nullable="false" />
+          <Property Name="slQuantity" Type="Int16" Nullable="false" />
+        </EntityType>
+        <Association Name="BuyerListShopList">
+          <End Type="Model1.BuyerList" Role="BuyerList" Multiplicity="1" />
+          <End Type="Model1.ShopList" Role="ShopList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BuyerList">
+              <PropertyRef Name="blID" />
+            </Principal>
+            <Dependent Role="ShopList">
+              <PropertyRef Name="BuyerList_blID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductShopList">
+          <End Type="Model1.Product" Role="Product" Multiplicity="1" />
+          <End Type="Model1.ShopList" Role="ShopList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="sID" />
+              <PropertyRef Name="cID" />
+            </Principal>
+            <Dependent Role="ShopList">
+              <PropertyRef Name="Product_sID" />
+              <PropertyRef Name="Product_cID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="Model1" />
+        <Alias Key="Target" Value="Model1.Store" />
+        <EntityContainerMapping CdmEntityContainer="Model1Container" StorageEntityContainer="Model1TargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
